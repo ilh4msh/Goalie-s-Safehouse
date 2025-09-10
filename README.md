@@ -39,7 +39,8 @@
         D --> C
         C --> E[Template HTML]
         E -->|HTTP Response| A
-
+    ```
+    
     jadi pertama ketika ketika pengguna mengakses URL tertentu maka Django akan mencocokkan URL request dengan pola (pattern) yang sudah didefinisikan di urls.py yang nantinya request diarahkan ke fungsi/kelas tertentu di views.py. Fungsi di views.py menerima request. Jika butuh data dari database, views.py memanggil models.py. models.py menyediakan interface antara views.py dan database jadi melalui models.py data data yang dibutuhkan akan diambil. setelah data diambil maka akan dimasukan ke HTML. HTML ini berisi struktur tampilan halaman web yang nantinya akan diakses pengguna. setelah semua data dimasukan ke HTML maka HTML ini akan dikembalikan ke client broser jadi pengguna dapat melihat tampilannya.
 
     
