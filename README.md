@@ -54,3 +54,29 @@
         menurut saya karena dengan menggunakan django karena django sudah memiliki banyak fitur bawaan. selain itu django juga terbilang cepat dalam proses developmentnya jadi cocok untuk belajar dan yang paling penting django memiliki komunitas yang besar dan aktif. komunitas yang aktif ini menandakan bahwa django memang relevan dengan industri saat ini.
     
     - Apakah ada feedback untuk asisten dosen tutorial 1 yang telah kamu kerjakan sebelumnya? asdos sudah sangat membantu selama tutorial 1 dan 0, semangat trus kakak-kakak asdos
+
+
+- Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
+agar Platform dapet mengirimkan data sceara real-time  dan server bisa mengirimkan data ke banyak client sekaligus sehingga client tidak perlu mengambil data secara manual
+
+- Menurutmu, mana yang lebih baik antara XML dan JSON? Mengapa JSON lebih populer dibandingkan XML?
+menurut saya lebih baik JSON karena JSON lebih mudah dibaca dan mirip dengan javascript.
+alasan JSON lebih populer mungkin sama dengan pendapat saya JSON lebih mudah dibaca dan juga JSON support untuk javascript.
+
+- Jelaskan fungsi dari method is_valid() pada form Django dan mengapa kita membutuhkan method tersebut?
+Validasi data input berdasarkan aturan yang telah didefinisikan di form (misal max_length). lalu dapat Membersihkan data melalui method clean() atau clean_<field>(). sehingga dapat menghasilkan cleaned_data yang aman untuk digunakan.
+hal ini dilakukan Untuk mencegah input yang tidak sesuai format masuk ke database sehingga dapat menjamin integritas data. selain itu dengan method ini dapat memudahkan penanganan error secara otomatis dengan menyediakan feedback ke user.
+
+- Mengapa kita membutuhkan csrf_token saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan csrf_token pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang?
+CSRF adalah serangan di mana penyerang memaksa user melakukan aksi yang tidak diinginkan di situs yang user sudah login. jadi fungsi csrf_token adalah membuat token unik yang hanya diketahui client dan server yang nantinya akan divalidasi ketika menerima request. jika tidak menambahkan csrf_token resikonya adalah serangan CSRF itu sendiri yang berbahaya dari serangan ini adalah attacker dapat menyisipkan perintah berbahaya yang tidak disadari oleh user(misal ubah password, hapus data). contoh eksploitasinya adalah attacker dapat membuat halaman eksternal dengan form yang submit ke situs target. Jika user login di situs target lalu membuka halaman attacker, form otomatis terkirim dan aksi tersebut dilakukan atas nama user secara tidak sadar.
+
+- Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+saya membuat function baru di views untuk menampilkan XML dan JSON, lalu menambahkannya dengan menampilkannya dengan id. setelah itu di urls.py saya menambahkan import nama function dan menambhakannya di path. lalu saya coba menjalankannya via browser karena sudah bisa saya mencobanya lagi melalui postman dan menambahkannya di screenshoots dibawah. lalu saya mulai membuat bagian 2 yakni menambahkan halaman add product dan detail product. pada bagian ini saya sedikit merubah bagian models.py saya. saya menambahkan stock, size, dan juga created_at. hal ini saya laukan agar tampilan dari page add dan page dari detail lebih bagus. selain itu saya juga membuat categry untuk size dan kategori produk. hal ini saya lakukan agar ketika nanti di add page user bisa langsung memilih dari list yang ada. setelah merapihkan models.py saya membuat function di views yakni create product dan show product lalu menambahkan pathnya ke urls.py setelah itu selesai saya mulai menambahkan kode pada main.html lalu saya membuat create_product.html dan showproduct.html yang nantinya akan menjadi file html yang akan ditampilkan ketika user menuju ke add dan detail. setelah itu saya menambahkan csrf trusted origin lalu mencoba pengetesannya melalui local host dengan menambahkan product baru. karena sudah bisa semua saya melakukan push ke pws dan tugas 3 selesai
+
+- Apakah ada feedback untuk asdos di tutorial 2 yang sudah kalian kerjakan? tidak ada, terima kasih kakak - kakak asdos
+
+
+![alt text](screenshots/image.png)
+![alt text](screenshots/image-1.png)
+![alt text](screenshots/image-2.png)
+![alt text](screenshots/image-3.png)
