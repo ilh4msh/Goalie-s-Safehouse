@@ -1,3 +1,4 @@
+## Tugas 1
 - [x]Membuat sebuah proyek Django baru.
     disini saya membuat proyek django baru dengan tema football shop jadi project yang dibuat saya beri nama goalies safehouse. sama memilih project ini karena saya merasa ini akan jadi menarik ketika football shop ini menjual peralatan khusus kiper.
     pada pembuatan project ini awalnya saya membuat repo baru dulu di github dengan nama 'Goalie-s-Safehouse' lalu saya melakukan cloning dari repo itu ke lokal dan saya mulai melakukan berbagai konfigurasi menggunakan folder hasil kloning itu. disitu saya memulai dengan mengunduh requirements yang dibutuhkan untuk project django setelah itu saya konfigurasi dari env, env.prod, settings database dan lain lain. setelah siap saya mencoba menjalankan server untuk memastikan bahwa project berhasil dibuat.
@@ -56,6 +57,7 @@
     - Apakah ada feedback untuk asisten dosen tutorial 1 yang telah kamu kerjakan sebelumnya? asdos sudah sangat membantu selama tutorial 1 dan 0, semangat trus kakak-kakak asdos
 
 
+## TUGAS 2
 - Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
 agar Platform dapet mengirimkan data sceara real-time  dan server bisa mengirimkan data ke banyak client sekaligus sehingga client tidak perlu mengambil data secara manual
 
@@ -80,3 +82,62 @@ saya membuat function baru di views untuk menampilkan XML dan JSON, lalu menamba
 ![alt text](screenshots/image-1.png)
 ![alt text](screenshots/image-2.png)
 ![alt text](screenshots/image-3.png)
+
+## TUGAS 3
+- Mengimplementasikan fungsi registrasi, login, dan logout untuk memungkinkan pengguna mengakses aplikasi sebelumnya sesuai dengan status login/logoutnya.
+disini saya menambahkan function baru di views.py lalu setelah itu mengkonfigurasikan routingnya di urls yaitu menambahkannyad di url patterns lalu menyiapkan file html yang nantinya akan ditampilkan ke user
+- Membuat dua (2) akun pengguna dengan masing-masing tiga (3) dummy data menggunakan model yang telah dibuat sebelumnya untuk setiap akun di lokal.
+mensimulasikannya dengan mencoba membuat akun pengguna dengan username ilham dan menambahkan 3 product akun tersebut. dapat dilihat digambar dibawah
+![alt text](<screenshots/Screenshot 2025-09-24 065459.png>)
+
+- Menghubungkan model Product dengan User.
+pada bagian product menambahkan user pembuatnya dan menampilkannya di show product dengan menambahkan identifier user di bagian create product di views.py
+- Menampilkan detail informasi pengguna yang sedang logged in seperti username dan menerapkan cookies seperti last_login pada halaman utama aplikasi.
+menambahkan cookie dibagian function login user pada views.py agar ketika user melakukan login datanya terekam dan tersimpan sebagai cookie di sisi client
+- Menjawab beberapa pertanyaan berikut pada README.md pada root folder (silakan modifikasi README.md yang telah kamu buat sebelumnya; tambahkan subjudul untuk setiap tugas).
+    - Apa itu Django AuthenticationForm? Jelaskan juga kelebihan dan kekurangannya.
+    AuthenticationForm adalah form bawaan dari Django yang digunakan untuk membantu proses login pengguna. Form ini secara otomatis menyediakan field username dan password, serta melakukan validasi kredensial terhadap database user Django.  
+    Kelebihan:
+    - Sudah terintegrasi dengan sistem autentikasi Django.
+    - Validasi login (username & password) dilakukan otomatis.
+    - Aman karena password dicek dengan hashing, bukan plaintext.
+    - Mudah digunakan dan bisa dikustomisasi.
+    Kekurangan:
+    - Kurang fleksibel jika ingin menambahkan field khusus (misalnya login dengan email).
+    - Tampilan standar sangat sederhana, biasanya perlu kustomisasi form agar sesuai desain aplikasi.
+
+    - Apa perbedaan antara autentikasi dan otorisasi? Bagaiamana Django mengimplementasikan kedua konsep tersebut?
+    autentikasi digunakan untuk memverifikasi identitas user seperti apakah user ini adalah admin, penjual, atau pembeli. selain itu juga mengecek apakah nama dan password yang user masukan untuk sebuah akun itu valid. sedangkan autorisasi akan memberikan hak akses kepada user. misalnya sebagai admin user bisa merubah dan mengkustom tampilan website, sebagai pembeli user hanya bisa membeli barang dan memberi reviewnya sehingga user pembeli tidak dapat menjual barang.
+    - Apa saja kelebihan dan kekurangan session dan cookies dalam konteks menyimpan state di aplikasi web?
+    Session:
+    Kelebihan:
+    - Data tidak langsung tersimpan di browser user, melainkan di server.
+    - Bisa menyimpan data lebih kompleks.
+    Kekurangan:
+    - Membutuhkan manajemen di server.
+    - Jika server down, session bisa hilang jika tidak dikelola dengan baik.
+
+    Cookies:
+    Kelebihan:
+    - Ringan, disimpan langsung di browser user.
+    - Tidak membutuhkan penyimpanan tambahan di server.
+    Kekurangan:
+    - Kapasitas kecil.
+    - Lebih rentan terhadap pencurian/penyalahgunaan (misalnya cookie hijacking).
+
+    - Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai? Bagaimana Django menangani hal tersebut?
+    Cookies tidak sepenuhnya aman secara default, karena cookie bisa diakses/dicuri lewat serangan seperti XSS (Cross-Site Scripting) atau cookie hijacking.  
+
+    Risiko potensial:
+    - Cookie bisa dicuri jika tidak diamankan dengan HttpOnly.
+    - Bisa dipalsukan jika tidak menggunakan enkkripsi.
+    - Rentan di jaringan tidak aman tanpa Secure flag (HTTPS).
+
+    cara penanganannya di Django:
+    - Menggunakan HttpOnly cookie agar tidak bisa diakses dengan JavaScript.
+    - Mendukung Secure flag untuk memastikan cookie hanya dikirim lewat HTTPS.
+    - Session cookies Django ditandatangani secara kriptografis untuk mencegah pemalsuan.
+    - Developer bisa mengatur opsi tambahan di `settings.py` seperti:
+    - SESSION_COOKIE_SECURE = True
+    - SESSION_COOKIE_HTTPONLY = True
+    - CSRF_COOKIE_SECURE = True
