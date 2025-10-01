@@ -1,59 +1,50 @@
- {% extends 'base.html' %}
- {% block content %}
-<h1>{{ app_name }}</h1>
+{% extends 'base.html' %}
+{% load static %}
 
-<h5>Name: </h5>
-<p>{{ name }}<p>
-<h5>NPM: </h5>
-<p>{{ npm }}</p>
-<h5>Class: </h5>
-<p>{{ class }}</p>
+{% block meta %}
+<title>Goalie’s Safehouse</title>
+{% endblock meta %}
 
-<a href="{% url 'main:create_product' %}">
-  <button>+ Add Product</button>
-</a>
+{% block content %}
+{% include 'navbar.html' %}
+<div class="bg-gray-50 w-full pt-16 min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-<a href="{% url 'main:logout' %}">
-  <button>Logout</button>
-</a>
-<p>Username: {{ username }}<p>
-<h5>Sesi terakhir login: {{ last_login }}</h5>
+    <!-- Header Section -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome to <span style="color:#FE0000;">Goalie’s</span> <span style="color:#0000FE;">Safehouse</span></h1>
+      <p class="text-gray-600">Stay updated with the latest football stories and explore exclusive products</p>
+    </div>
 
-<a href="?filter=all">
-    <button type="button">All Products</button>
-</a>
-<a href="?filter=my">
-    <button type="button">My Products</button>
-</a> 
+    <!-- Products Section -->
+    <div>
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-semibold text-gray-900">Exclusive Products</h2>
+        <a href="{% url 'main:create_product' %}" class="inline-flex items-center px-4 py-2 bg-[#0000FE] text-white rounded-md hover:bg-[#0000A1] transition-colors">
+          Add Product
+        </a>
+      </div>
 
-<hr>
+      {% if not product_list %}
+        <div class="bg-white rounded-lg border border-gray-200 p-12 text-center">
+          <div class="w-32 h-32 mx-auto mb-4">
+            <img src="{% static 'image/no-products.png' %}" alt="No products available" class="w-full h-full object-contain">
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">No products found</h3>
+          <p class="text-gray-500 mb-6">Start by adding your first product to the marketplace.</p>
+          <a href="{% url 'main:create_product' %}" class="inline-flex items-center px-4 py-2 bg-[#0000FE] text-white rounded-md hover:bg-[#0000A1] transition-colors">
+            Add Product
+          </a>
+        </div>
+      {% else %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {% for product in product_list %}
+            {% include 'product_card.html' with product=product %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
 
-{% if not product_list %}
-<p>Belum ada produk yang tersedia di Goalie’s Safehouse.</p>
-{% else %}
-
-{% for product in product_list %}
-<div>
-  <h2><a href="{% url 'main:show_product' product.id %}">{{ product.name }}</a></h2>
-
-  <p>
-    <b>Kategori: {{ product.category }}</b> 
-    {% if product.is_featured %} | <b>Featured</b>{% endif %} 
-    | <b>Harga: Rp {{ product.price }}</b>
-  </p>
-
-  {% if product.thumbnail %}
-  <img src="{{ product.thumbnail }}" alt="thumbnail" width="150" height="100">
-  <br />
-  {% endif %}
-
-  <p>{{ product.description|truncatewords:25 }}...</p>
-
-  <p><a href="{% url 'main:show_product' product.id %}"><button>Detail Produk</button></a></p>
+  </div>
 </div>
-
-<hr>
-{% endfor %}
-
-{% endif %}
 {% endblock content %}

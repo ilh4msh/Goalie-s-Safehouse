@@ -1,4 +1,4 @@
-## Tugas 1
+## Tugas 2
 - [x]Membuat sebuah proyek Django baru.
     disini saya membuat proyek django baru dengan tema football shop jadi project yang dibuat saya beri nama goalies safehouse. sama memilih project ini karena saya merasa ini akan jadi menarik ketika football shop ini menjual peralatan khusus kiper.
     pada pembuatan project ini awalnya saya membuat repo baru dulu di github dengan nama 'Goalie-s-Safehouse' lalu saya melakukan cloning dari repo itu ke lokal dan saya mulai melakukan berbagai konfigurasi menggunakan folder hasil kloning itu. disitu saya memulai dengan mengunduh requirements yang dibutuhkan untuk project django setelah itu saya konfigurasi dari env, env.prod, settings database dan lain lain. setelah siap saya mencoba menjalankan server untuk memastikan bahwa project berhasil dibuat.
@@ -57,7 +57,7 @@
     - Apakah ada feedback untuk asisten dosen tutorial 1 yang telah kamu kerjakan sebelumnya? asdos sudah sangat membantu selama tutorial 1 dan 0, semangat trus kakak-kakak asdos
 
 
-## TUGAS 2
+## TUGAS 3
 - Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
 agar Platform dapet mengirimkan data sceara real-time  dan server bisa mengirimkan data ke banyak client sekaligus sehingga client tidak perlu mengambil data secara manual
 
@@ -83,7 +83,7 @@ saya membuat function baru di views untuk menampilkan XML dan JSON, lalu menamba
 ![alt text](screenshots/image-2.png)
 ![alt text](screenshots/image-3.png)
 
-## TUGAS 3
+## TUGAS 4
 - Mengimplementasikan fungsi registrasi, login, dan logout untuk memungkinkan pengguna mengakses aplikasi sebelumnya sesuai dengan status login/logoutnya.
 disini saya menambahkan function baru di views.py lalu setelah itu mengkonfigurasikan routingnya di urls yaitu menambahkannyad di url patterns lalu menyiapkan file html yang nantinya akan ditampilkan ke user
 - Membuat dua (2) akun pengguna dengan masing-masing tiga (3) dummy data menggunakan model yang telah dibuat sebelumnya untuk setiap akun di lokal.
@@ -141,3 +141,85 @@ menambahkan cookie dibagian function login user pada views.py agar ketika user m
     - SESSION_COOKIE_SECURE = True
     - SESSION_COOKIE_HTTPONLY = True
     - CSRF_COOKIE_SECURE = True
+
+## Tugas 5
+Checklist untuk tugas ini adalah sebagai berikut:
+- Implementasikan fungsi untuk menghapus dan mengedit product.
+pada bagian ini saya hanya perlu menambahkan fungsi baru dibagian views lalu menambahkan pathnya ke urls.py. jika sudah selesai saya hanya perlu membuat template htmlnya yang saya beri nama edit_product dan menambahkan tombol delete di main.html
+
+- Kustomisasi desain pada template HTML yang telah dibuat pada tugas-tugas sebelumnya menggunakan CSS atau CSS framework (seperti Bootstrap, Tailwind, Bulma) dengan ketentuan sebagai berikut:
+saya menggunakan tailwind untuk modifikasi ini. pertama saya siapkan global.css yang nantinya akan berguna dalam beberapa fungsi berulang contohnya pada form jadi saya buat di form itu agar ketika di klik jadi warna biru nah itu bisa ditambahkan melalui global.css
+lalu untuk tema warna saya gunakan warna merah dan biru
+
+- Kustomisasi halaman login, register, tambah product, edit product, dan detail product semenarik mungkin.
+merubah design halaman dengan framework tailwind. saya juga menambahkan beberapa fitur seperti hover agar meningkatkan engagement dengan pengguna. disini saya hanya perlu melakukan sedikit perubahan pada template tutorial seperti pemanggilan kata kunci untuk thumbnail dan melakukan perubahan warna agar sesuai dengan tema saya
+
+- Kustomisasi halaman daftar product menjadi lebih menarik dan responsive. Kemudian, perhatikan kondisi berikut:
+pada daftar product aku siapkan cards_product yang nantinya akan menampilkan list product perblok kartu
+
+- Jika pada aplikasi belum ada product yang tersimpan, halaman daftar product akan menampilkan gambar dan pesan bahwa belum ada product yang terdaftar. pada bagian ini saya hanya perlu membuat condition di main.html ketika product masih kosong nantinya akan saya tampilkan gambar no_products dan menyampaikan bahwa product masih kosong
+
+- Jika sudah ada product yang tersimpan, halaman daftar product akan menampilkan detail setiap product dengan menggunakan card (tidak boleh sama persis dengan desain pada Tutorial!). lalu untuk ini aku memanfaatkan cards yang tadi kubuat untuk menampilkan list productnya. jadi dipanggil 1 per satu dengan loop
+
+- Untuk setiap card product, buatlah dua buah button untuk mengedit dan menghapus product pada card tersebut!
+implementasi ini sudah dilakukan di product_card jadi hanya perlu menambahkan bagian edit dan delete yang nantinya akan terhubung ke fungsi edit dan delete di views
+
+- Buatlah navigation bar (navbar) untuk fitur-fitur pada aplikasi yang responsive terhadap perbedaan ukuran device, khususnya mobile dan desktop. Contoh dari navbar yang responsive (Tidak perlu sama persis!):
+lalu untuk navbar dibagi jadi 2 section untuk dekstop lebih simple dan untuk mobile(tampilannya jadi kayak sidebar ketika di buka). lalu untuk responsivitas juga udah ditambahkan di base.html jadi akan di cek terus ukuran layar yang akan ditampilkan jadi sudah responsive untuk mobile dan dekstop
+
+ Menjawab beberapa pertanyaan berikut pada README.md pada root folder (silakan modifikasi README.md yang telah kamu buat sebelumnya; tambahkan subjudul untuk setiap tugas).
+
+ 1. Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+Urutan Prioritas CSS Selector (Specificity & Source Order)
+
+Ketika ada beberapa aturan CSS yang mengatur elemen HTML yang sama, browser akan memilih aturan mana yang lebih spesifik dan lebih prioritas. Urutannya adalah:
+
+Inline Styles: Ditulis langsung pada elemen HTML dengan atribut style.
+Inline memiliki prioritas paling tinggi dibanding internal dan external.
+
+Internal Style Sheet (Embedded CSS): Ditulis dalam tag <style> di dalam file HTML.
+Prioritasnya lebih rendah dari inline, tapi lebih tinggi daripada external.
+
+External Style Sheet: Ditulis dalam file .css terpisah lalu dihubungkan dengan <link>.
+Prioritasnya paling rendah, kecuali jika ada penggunaan selector yang lebih spesifik.
+
+ 2. Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design, serta jelaskan mengapa!
+ Responsive design adalah pendekatan desain web agar tampilan aplikasi dapat menyesuaikan ukuran layar dan perangkat (desktop, tablet, smartphone).
+
+Pentingnya Responsive Design
+- Memastikan pengalaman pengguna konsisten di berbagai perangkat.
+- Mengurangi kebutuhan membuat versi aplikasi terpisah untuk mobile.
+- SEO lebih baik karena Google memprioritaskan website yang mobile-friendly.
+
+Contoh
+Sudah menerapkan: website whatsapp dekstop. 
+Belum menerapkan: siakng ketika dibuka di smartphone, tampilan akan mengecil atau jadi teralu besar dan harus di geser geser atau malah dipaksa disesuaikan jadi bertabrakan antar elemennya.
+
+ 3. Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
+    
+    ![alt text](screenshots/image-4.png)
+
+    Margin → ruang di luar border (jarak antar konten) - transparan.
+    Border → garis pembatas di sekeliling konten - garis tepi.
+    Padding → ruang antara konten dan border - transparan.
+
+    implementasi :
+    .box {
+        margin: 20px;      /* jarak luar elemen */
+        border: 2px solid black; /* garis pinggir elemen */
+        padding: 15px;     /* jarak dalam elemen */
+    }
+
+
+ 4. Jelaskan konsep flex box dan grid layout beserta kegunaannya!
+    Flexbox
+    Konsep: Mengatur layout dalam satu dimensi saja (baris atau kolom).
+    Kegunaan: Mempermudah alignment, distribusi ruang, dan fleksibilitas elemen.
+
+    Grid Layout
+    Konsep: Mengatur layout dalam dua dimensi (baris dan kolom).
+    Kegunaan: Cocok untuk desain yang kompleks dan terstruktur seperti dashboard.
+ 
+ 5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+ 
+Melakukan add-commit-push ke GitHub.
