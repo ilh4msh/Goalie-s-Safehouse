@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block meta %}
-<title>{{ product.name }} - Product Detail</title>
+<title>Product Detail - Goalie’s Safehouse</title>
 {% endblock meta %}
 
 {% block content %}
@@ -11,89 +11,75 @@
         
         <!-- Back Navigation -->
         <div class="mb-6">
-            <a href="{% url 'main:show_main' %}" 
-               class="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+            <a href="{% url 'main:show_main' %}" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                 ← Back to Products
             </a>
         </div>
         
-        <!-- Product Card -->
-        <article class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <!-- Loading State -->
+        <div id="loading-state" class="bg-white rounded-lg border border-gray-200 p-12 text-center">
+            <svg class="animate-spin h-8 w-8 text-blue-600 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            <p class="text-gray-600 mt-3">Loading product detail...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" class="bg-white rounded-lg border border-gray-200 p-12 text-center hidden">
+            <div class="w-16 h-16 mx-auto mb-4">
+                <div class="text-red-500 text-5xl">⚠️</div>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Failed to load product</h3>
+            <p class="text-gray-500">Please try again later.</p>
+        </div>
+        
+        <!-- Product Content -->
+        <article id="product-content" class="bg-white rounded-lg border border-gray-200 overflow-hidden hidden">
             
             <!-- Header -->
             <div class="p-6 sm:p-8">
-                <div class="flex flex-wrap items-center gap-2 mb-4">
-                    {% if product.category %}
-                        <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-[#0000FE] text-white">
-                            {{ product.category }}
-                        </span>
-                    {% endif %}
-                </div>
+                <div id="badges-container" class="flex flex-wrap items-center gap-2 mb-4"></div>
                 
-                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4">
-                    {{ product.name }}
-                </h1>
+                <h1 id="product-title" class="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4"></h1>
                 
                 <div class="flex flex-wrap items-center text-sm text-gray-500 gap-4">
-                    <span>{{ product.stock }} in stock</span>
-                    <span>Rp {{ product.price }}</span>
+                    <span id="product-stock"></span>
+                    <span id="product-price"></span>
+                    <span id="product-views"></span>
                 </div>
             </div>
 
             <!-- Product Image -->
-            {% if product.thumbnail %}
-                <div class="px-6 sm:px-8">
-                    <img src="{{ product.thumbnail }}" 
-                         alt="{{ product.name }}" 
-                         class="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg">
-                </div>
-            {% endif %}
+            <div id="product-image-container" class="px-6 sm:px-8 hidden">
+                <img id="product-image" 
+                     src="" 
+                     alt="" 
+                     class="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg">
+            </div>
 
             <!-- Description -->
             <div class="p-6 sm:p-8">
                 <div class="prose prose-lg max-w-none">
-                    <div class="text-gray-700 leading-relaxed whitespace-pre-line text-base sm:text-lg">
-                        {{ product.description }}
-                    </div>
+                    <div id="product-description" class="text-gray-700 leading-relaxed whitespace-pre-line text-base sm:text-lg"></div>
                 </div>
             </div>
 
-            <!-- Footer / Actions -->
+            <!-- Seller Info -->
             <div class="border-t border-gray-200 p-6 sm:p-8 bg-gray-50">
                 <div class="flex items-center justify-between">
                     <div>
                         <div class="font-medium text-gray-900">
-                            {% if product.user %}
-                                <p>Seller: {{ product.user.username }}</p>
-                            {% else %}
-                                <p>Seller: Unknown</p>
-                            {% endif %}
+                            <p id="product-seller">Seller: Loading...</p>
                         </div>
+                        <p class="text-sm text-gray-500">Seller Information</p>
                     </div>
 
-                    <!-- Action Buttons -->
-                    <div class="flex space-x-3">
-                        {% if user.is_authenticated %}
-                            {% if product.user == user %}
-                                <a href="{% url 'main:edit_product' product.id %}" 
-                                   class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 transition-colors">
-                                    Edit
-                                </a>
-                                <a href="{% url 'main:delete_product' product.id %}" 
-                                   class="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-800 transition-colors">
-                                    Delete
-                                </a>
-                            {% else %}
-                                <button class="px-4 py-2 bg-[#0000FE] text-white rounded-md hover:bg-[#0000A1] transition-colors">
-                                    Buy Now
-                                </button>
-                            {% endif %}
-                        {% else %}
-                            <a href="{% url 'main:login' %}" 
-                               class="px-4 py-2 bg-[#FE0000] text-white rounded-md hover:bg-[#CC0000] transition-colors">
-                                Sign in to Buy
-                            </a>
-                        {% endif %}
+                    <!-- Action Button -->
+                    <div>
+                        <button id="buy-button" class="px-4 py-2 bg-[#0000FE] text-white rounded-md hover:bg-[#0000A1] transition-colors">
+                            Buy Now
+                        </button>
                     </div>
                 </div>
             </div>
@@ -101,3 +87,103 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block scripts %}
+<script>
+// Config
+const PRODUCT_ID = "{{ product.id }}";
+const PRODUCT_DETAIL_ENDPOINT = `{% url 'main:show_json_by_id' '00000000-0000-0000-0000-000000000000' %}`
+    .replace('00000000-0000-0000-0000-000000000000', PRODUCT_ID);
+
+// DOM Elements
+const loadingState = document.getElementById('loading-state');
+const errorState = document.getElementById('error-state');
+const productContent = document.getElementById('product-content');
+const badgesContainer = document.getElementById('badges-container');
+const productTitle = document.getElementById('product-title');
+const productStock = document.getElementById('product-stock');
+const productPrice = document.getElementById('product-price');
+const productViews = document.getElementById('product-views');
+const productImageContainer = document.getElementById('product-image-container');
+const productImage = document.getElementById('product-image');
+const productDescription = document.getElementById('product-description');
+const productSeller = document.getElementById('product-seller');
+
+// State control
+function showState(state) {
+    loadingState.classList.toggle('hidden', state !== 'loading');
+    errorState.classList.toggle('hidden', state !== 'error');
+    productContent.classList.toggle('hidden', state !== 'ready');
+}
+
+// Category to Label
+function getCategoryLabel(category) {
+    const map = {
+        gloves: 'Gloves',
+        jersey: 'Jersey',
+        shoes: 'Shoes',
+        accessories: 'Accessories'
+    };
+    return map[category] || category;
+}
+
+// Render product data
+function renderProduct(product) {
+    // Title
+    productTitle.textContent = product.name;
+    document.title = `${product.name} - Goalie’s Safehouse`;
+
+    // Category badge
+    badgesContainer.innerHTML = '';
+    if (product.category) {
+        const badge = document.createElement('span');
+        badge.className = 'inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-[#0000FE] text-white';
+        badge.textContent = getCategoryLabel(product.category);
+        badgesContainer.appendChild(badge);
+    }
+
+    // Stock, Price, Views
+    productStock.textContent = `${product.stock} in stock`;
+    productPrice.textContent = `Rp ${product.price}`;
+    productViews.textContent = `${product.product_views} views`;
+
+    // Image
+    if (product.thumbnail) {
+        productImage.src = product.thumbnail;
+        productImage.alt = product.name;
+        productImageContainer.classList.remove('hidden');
+    } else {
+        productImageContainer.classList.add('hidden');
+    }
+
+    // Description
+    productDescription.textContent = product.description || 'No description available.';
+
+    // Seller
+    const sellerName = product.user_username || 'Unknown';
+    productSeller.textContent = `Seller: ${sellerName}`;
+}
+
+// Fetch product detail
+async function loadProductDetail() {
+    try {
+        showState('loading');
+        const response = await fetch(PRODUCT_DETAIL_ENDPOINT, {
+            headers: { 'Accept': 'application/json' },
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch product detail');
+
+        const productData = await response.json();
+        renderProduct(productData);
+        showState('ready');
+    } catch (error) {
+        console.error('Error loading product detail:', error);
+        showState('error');
+    }
+}
+
+// Init
+loadProductDetail();
+</script>
+{% endblock scripts %}

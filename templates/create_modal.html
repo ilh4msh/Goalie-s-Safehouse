@@ -1,0 +1,105 @@
+{% load static %}
+
+<!--  Product Modal -->
+<div id="createModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50 transition-opacity">
+  <div id="createModalContent" class="bg-white rounded-lg shadow-lg w-11/12 sm:w-3/5 md:w-1/2 lg:w-2/5 xl:w-1/3 max-h-screen overflow-y-auto transform scale-95 opacity-0 transition-all duration-200 ease-out">
+    
+    <!-- Modal header -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+      <div>
+        <h3 class="text-xl font-bold text-gray-900">Add New Product</h3>
+        <p class="text-sm text-gray-600 mt-1">Fill out the form below to add a new product to Goalie’s Safehouse</p>
+      </div>
+      <button type="button" class="text-gray-400 hover:text-gray-700 transition-colors" onclick="hideCreateModal()">
+        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal body -->
+    <div class="px-6 py-6">
+      <form id="createProductForm" class="space-y-6">
+        {% csrf_token %}
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+          <input type="text" id="name" name="name" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter product name" required>
+        </div>
+        <div>
+          <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Price</label>
+          <input type="number" id="price" name="price" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter product price" required>
+        </div>
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+          <textarea id="description" name="description" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter product description" required></textarea>
+        </div>
+        <div>
+          <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+          <select id="category" name="category" 
+                  class="w-full border border-gray-300 rounded-md px-3 py-2 
+                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+            <option value="" disabled selected>Select a category</option>
+            {% for value, label in Product.CATEGORY_CHOICES %}
+              <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>        <div>
+          <label for="image_url" class="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
+          <input type="url" id="image_url" name="image_url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="https://example.com/product.jpg">
+        </div>
+      </form>
+    </div>
+
+    <!-- Modal footer -->
+    <div class="flex flex-col sm:flex-row gap-4 p-6 border-t border-gray-200">
+      <button type="button" onclick="hideCreateModal()" class="order-2 sm:order-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-md font-medium hover:bg-gray-50 transition-colors text-center">
+        Cancel
+      </button>
+      <button type="submit" id="submitProductBtn" class="order-1 sm:order-2 flex-1 bg-blue-600 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+        Add Product
+      </button>
+    </div>
+  </div>
+</div>
+
+{% block scripts %}
+<script>
+  function showCreateModal() {
+    const modal = document.getElementById('createModal');
+    const modalContent = document.getElementById('createModalContent');
+
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+      modalContent.classList.remove('opacity-0', 'scale-95');
+      modalContent.classList.add('opacity-100', 'scale-100');
+    }, 10);
+  }
+
+  function hideCreateModal() {
+    const modal = document.getElementById('createModal');
+    const modalContent = document.getElementById('createModalContent');
+
+    modalContent.classList.remove('opacity-100', 'scale-100');
+    modalContent.classList.add('opacity-0', 'scale-95');
+
+    setTimeout(() => {
+      modal.classList.add('hidden');
+    }, 200);
+  }
+
+document.getElementById('createProductForm').addEventListener('submit', async function(event) {
+    event.preventDefault();  // ⛔ supaya form gak submit normal (GET)
+    
+    const formData = new FormData(this);
+
+const response = await fetch("{% url 'main:create_product_ajax' %}", {
+        method: 'POST', // 🟢 penting!
+        body: formData
+    });
+
+    const data = await response.json();
+    console.log(data);
+});
+
+</script>
+{% endblock scripts %}

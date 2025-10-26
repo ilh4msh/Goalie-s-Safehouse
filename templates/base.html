@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
   </head>
   <body>
-    {% block content %} {% endblock content %}
+    {% block content %} {% endblock content %} {% include 'toast.html' %}  {%include 'create_modal.html' %}
+    {% block scripts %}{% endblock scripts %}
   </body>
 </html>
