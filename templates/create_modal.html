@@ -8,7 +8,7 @@
     <div class="flex items-center justify-between p-6 border-b border-gray-200">
       <div>
         <h3 class="text-xl font-bold text-gray-900">Add New Product</h3>
-        <p class="text-sm text-gray-600 mt-1">Fill out the form below to add a new product to Goalie’s Safehouse</p>
+        <p class="text-sm text-gray-600 mt-1">Fill out the form below to add a new product to Goalie's Safehouse</p>
       </div>
       <button type="button" class="text-gray-400 hover:text-gray-700 transition-colors" onclick="hideCreateModal()">
         <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -43,9 +43,28 @@
               <option value="{{ value }}">{{ label }}</option>
             {% endfor %}
           </select>
-        </div>        <div>
+        </div>
+        
+        <div>
+          <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">Stock</label>
+          <input type="number" id="stock" name="stock" min="0" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter product stock (optional)">
+        </div>
+        
+        <div>
+          <label for="size" class="block text-sm font-medium text-gray-700 mb-2">Size</label>
+          <select id="size" name="size" 
+                  class="w-full border border-gray-300 rounded-md px-3 py-2 
+                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <option value="" disabled selected>Select a size</option>
+            {% for value, label in Product.SIZE_CHOICES %}
+              <option value="{{ value }}" {% if value == 'l' %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <div>
           <label for="image_url" class="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
-          <input type="url" id="image_url" name="image_url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="https://example.com/product.jpg">
+          <input type="url" id="image_url" name="image_url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="https://example.com/product.jpg" required>
         </div>
       </form>
     </div>
@@ -55,7 +74,7 @@
       <button type="button" onclick="hideCreateModal()" class="order-2 sm:order-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-md font-medium hover:bg-gray-50 transition-colors text-center">
         Cancel
       </button>
-      <button type="submit" id="submitProductBtn" class="order-1 sm:order-2 flex-1 bg-blue-600 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+      <button type="submit" form="createProductForm" id="submitProductBtn" class="order-1 sm:order-2 flex-1 bg-blue-600 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
         Add Product
       </button>
     </div>
@@ -84,22 +103,48 @@
 
     setTimeout(() => {
       modal.classList.add('hidden');
+      document.getElementById("createProductForm").reset();
     }, 200);
   }
 
-document.getElementById('createProductForm').addEventListener('submit', async function(event) {
-    event.preventDefault();  // ⛔ supaya form gak submit normal (GET)
-    
-    const formData = new FormData(this);
+  async function addProductEntry() {
+    try {
+      const response = await fetch("{% url 'main:create_product_ajax' %}", {
+        method: "POST",
+        body: new FormData(document.querySelector('#createProductForm')),
+      });
 
-const response = await fetch("{% url 'main:create_product_ajax' %}", {
-        method: 'POST', // 🟢 penting!
-        body: formData
-    });
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Product created:', result);
+        
+        hideCreateModal();
+        showToast('Product added successfully!', '', 'success');
 
-    const data = await response.json();
-    console.log(data);
-});
+        // Dispatch custom event to notify main.html about new data
+        document.dispatchEvent(new CustomEvent('productAdded'));
+      } else {
+        const error = await response.json();
+        showToast('Failed to add product', error.error || '', 'error');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showToast('An error occurred', '', 'error');
+    }
+
+    return false;
+  }
+
+  document.addEventListener('productAdded', function() {
+    // Refresh data without page reload
+    fetchProducts()
+  });
+
+  // Event listener untuk form submit
+  document.getElementById("createProductForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    addProductEntry();
+  });
 
 </script>
 {% endblock scripts %}

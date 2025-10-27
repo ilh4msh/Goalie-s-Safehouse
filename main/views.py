@@ -175,28 +175,45 @@ def delete_product(request, id):
 @csrf_exempt
 @require_POST
 def create_product_ajax(request):
-    name = request.POST.get('name')
-    price = request.POST.get('price')
-    description = request.POST.get('description')
-    category = request.POST.get('category')
-    image_url = request.POST.get('image_url')
+    try:
+        name = request.POST.get('name')
+        price = request.POST.get('price')
+        description = request.POST.get('description')
+        category = request.POST.get('category')
+        image_url = request.POST.get('image_url')
+        stock = request.POST.get('stock')
+        size = request.POST.get('size')
+        
+        # Validasi data yang wajib diisi
+        if not all([name, price, description, category, image_url]):
+            return JsonResponse({'error': 'Semua field wajib diisi'}, status=400)
+        
+        # Buat product dengan semua field
+        product = Product.objects.create(
+            user=request.user if request.user.is_authenticated else None,
+            name=name,
+            price=int(price),
+            description=description,
+            category=category,
+            thumbnail=image_url,
+            stock=int(stock) if stock else None,
+            size=size if size else 'l',  # default 'l' jika tidak diisi
+        )
 
-    product = Product.objects.create(
-        name=name,
-        price=price,
-        description=description,
-        category=category,
-        thumbnail=image_url, 
-    )
-
-    return JsonResponse({
-        'id': str(product.id),
-        'name': product.name,
-        'price': product.price,
-        'description': product.description,
-        'category': product.get_category_display(), 
-        'image_url': product.thumbnail,
-    })
-
-    return JsonResponse({'error': 'Invalid request'}, status=400)
-
+        return JsonResponse({
+            'id': str(product.id),
+            'name': product.name,
+            'price': product.price,
+            'description': product.description,
+            'category': product.get_category_display(),
+            'image_url': product.thumbnail,
+            'stock': product.stock,
+            'size': product.get_size_display(),
+            'product_views': product.product_views,
+            'created_at': product.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        })
+    
+    except ValueError as e:
+        return JsonResponse({'error': 'Format data tidak valid'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
