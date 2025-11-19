@@ -14,8 +14,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from .models import Product
-
-
+import requests
+from django.utils.html import strip_tags
+import json
 
 
 @login_required(login_url='/login')
@@ -217,3 +218,55 @@ def create_product_ajax(request):
         return JsonResponse({'error': 'Format data tidak valid'}, status=400)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+def proxy_image(request):
+    image_url = request.GET.get('url')
+    if not image_url:
+        return HttpResponse('No URL provided', status=400)
+    
+    try:
+        # Fetch image from external source
+        response = requests.get(image_url, timeout=10)
+        response.raise_for_status()
+        
+        # Return the image with proper content type
+        return HttpResponse(
+            response.content,
+            content_type=response.headers.get('Content-Type', 'image/jpeg')
+        )
+    except requests.RequestException as e:
+        return HttpResponse(f'Error fetching image: {str(e)}', status=500)
+
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+        name = strip_tags(data.get("name", ""))
+        description = strip_tags(data.get("description", ""))
+        category = data.get("category", "")
+        thumbnail = data.get("thumbnail", "")
+        price = data.get("price", 0)
+        stock = data.get("stock", 0)
+        size = data.get("size", "")
+        product_views = data.get("product_views", 0)
+        user = request.user  # Dari session CookieRequest Flutter
+
+        # Create product object
+        new_product = Product(
+            name=name,
+            description=description,
+            category=category,
+            thumbnail=thumbnail,
+            price=price,
+            stock=stock,
+            size=size,
+            product_views=product_views,
+            user=user,                     # Foreign key ke User
+        )
+        new_product.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+
+    return JsonResponse({"status": "error", "message": "Invalid method"}, status=401)
+

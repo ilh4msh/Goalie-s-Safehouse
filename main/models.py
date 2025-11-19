@@ -28,7 +28,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='jersey')
-    thumbnail = models.URLField()
+    thumbnail = models.URLField(null=True, blank=True)
     price = models.IntegerField()
     stock = models.IntegerField(blank=True, null=True)
     size = models.CharField(max_length=20,  choices=SIZE_CHOICES, default='l')    

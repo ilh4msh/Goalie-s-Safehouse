@@ -31,6 +31,9 @@
         <a id="filter-my" class="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors hover:bg-blue-600 hover:text-white">
           My Products
         </a>
+        <a id="filter-sort" class="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors hover:bg-blue-600 hover:text-white">
+          Sort
+        </a>
       </div>
       {% if user.is_authenticated %}
         <button onclick="showCreateModal()"
@@ -86,6 +89,7 @@ const emptyStateDisplay = document.getElementById('empty');
 const productGridContainer = document.getElementById('grid');
 const showAllBtn = document.getElementById('filter-all');
 const showMyBtn = document.getElementById('filter-my');
+const showSortBtn = document.getElementById('filter-sort');
 
 // State
 let activeFilter = 'all';
@@ -96,9 +100,15 @@ function updateFilterButtonsAppearance() {
   if (activeFilter === 'all') {
     showAllBtn.className = 'bg-blue-600 text-white px-4 py-2 rounded-md font-medium transition-colors hover:bg-blue-700';
     showMyBtn.className = 'bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors hover:bg-blue-600 hover:text-white';
-  } else {
+    showSortBtn.className = 'bg-blue-600 text-white px-4 py-2 rounded-md font-medium transition-colors hover:bg-blue-700';
+  } else if (activeFilter === 'my') {
     showMyBtn.className = 'bg-blue-600 text-white px-4 py-2 rounded-md font-medium transition-colors hover:bg-blue-700';
     showAllBtn.className = 'bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors hover:bg-blue-600 hover:text-white';
+    showSortBtn.className = 'bg-blue-600 text-white px-4 py-2 rounded-md font-medium transition-colors hover:bg-blue-700';
+  } else if (activeFilter === 'sort') {
+    showMyBtn.className = 'bg-blue-600 text-white px-4 py-2 rounded-md font-medium transition-colors hover:bg-blue-700';
+    showAllBtn.className = 'bg-blue-600 text-white px-4 py-2 rounded-md font-medium transition-colors hover:bg-blue-700';
+    showSortBtn.className = 'bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors hover:bg-blue-600 hover:text-white';
   }
 }
 
@@ -172,6 +182,8 @@ function filterAndDisplayProducts() {
     filtered = allProductData;
   } else if (CURRENT_USER_ID) {
     filtered = allProductData.filter(p => Number(p.user_id) === Number(CURRENT_USER_ID));
+  } else if (activeFilter === 'sort'){
+    filtered = allProductData.sort()
   }
 
   if (filtered.length === 0) {
@@ -207,6 +219,11 @@ showMyBtn.addEventListener('click', () => {
   activeFilter = 'my';
   filterAndDisplayProducts();
 });
+
+showSortBtn.addEventListener('click', () => {
+  activeFilter = 'sort';
+  filterAndDisplayProducts();
+})
 
 // Init
 fetchProducts();
